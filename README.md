@@ -287,6 +287,3 @@ Make sure to update `schema.prisma` provider from `sqlite` to `postgresql` befor
 
 ---
 
-## License
-
-MIT
