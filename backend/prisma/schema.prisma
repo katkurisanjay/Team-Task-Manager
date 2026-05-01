@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String             @id @default(uuid())
+  name          String
+  email         String             @unique
+  password_hash String
+  role          String             @default("MEMBER") // "ADMIN" or "MEMBER"
+  created_at    DateTime           @default(now())
+  
+  workspaces_owned Workspace[]       @relation("WorkspaceOwner")
+  workspace_members WorkspaceMember[]
+  tickets_assigned Ticket[]          @relation("TicketAssignee")
+  tickets_created  Ticket[]          @relation("TicketCreator")
+}
+
+model Workspace {
+  id          String             @id @default(uuid())
+  name        String
+  description String?
+  owner_id    String
+  created_at  DateTime           @default(now())
+  
+  owner       User               @relation("WorkspaceOwner", fields: [owner_id], references: [id])
+  members     WorkspaceMember[]
+  tickets     Ticket[]
+}
+
+model WorkspaceMember {
+  workspace_id String
+  user_id      String
+  
+  workspace    Workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@id([workspace_id, user_id])
+}
+
+model Ticket {
+  id           String    @id @default(uuid())
+  title        String
+  description  String?
+  status       String    @default("TODO") // "TODO", "IN_PROGRESS", "DONE"
+  due_date     DateTime?
+  workspace_id String
+  assignee_id  String?
+  created_by   String
+  created_at   DateTime  @default(now())
+  
+  workspace    Workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  assignee     User?     @relation("TicketAssignee", fields: [assignee_id], references: [id])
+  creator      User      @relation("TicketCreator", fields: [created_by], references: [id])
+}
