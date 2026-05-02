@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { workspaceApi, ticketApi } from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -187,14 +187,13 @@ export default function WorkspaceDetailPage() {
   const [editingTicket, setEditingTicket] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const load = () => {
-    setLoading(true);
+  const load = useCallback(() => {
     workspaceApi.getById(workspaceId)
       .then((res) => setWorkspace(res.data.data))
       .finally(() => setLoading(false));
-  };
+  }, [workspaceId]);
 
-  useEffect(() => { load(); }, [workspaceId]);
+  useEffect(() => { load(); }, [load]);
 
   const handleDeleteWorkspace = async () => {
     try {
@@ -231,7 +230,6 @@ export default function WorkspaceDetailPage() {
   const total = tickets.length;
   const done = tickets.filter((t) => t.status === 'DONE').length;
   const progress = total === 0 ? 0 : Math.round((done / total) * 100);
-  const now = new Date();
 
   return (
     <div>
