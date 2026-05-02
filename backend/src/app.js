@@ -22,6 +22,13 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/workspaces', workspaceRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
 
+// Serve frontend in production
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
 // Error Handler
 app.use(errorHandler);
 
