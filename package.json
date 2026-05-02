@@ -4,6 +4,6 @@
   "scripts": {
     "postinstall": "npm install --prefix backend && npm install --prefix frontend",
     "build": "npm run build --prefix frontend && cd backend && npx prisma generate",
-    "start": "cd backend && npx prisma db push --accept-data-loss && node src/server.js"
+    "start": "cd backend && npx prisma db push --accept-data-loss && NODE_ENV=production node src/server.js"
   }
 }
