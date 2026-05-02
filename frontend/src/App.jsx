@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import WorkspacesPage from './pages/WorkspacesPage';
 import WorkspaceDetailPage from './pages/WorkspaceDetailPage';
+import LandingPage from './pages/LandingPage';
 
 export default function App() {
   return (
@@ -25,7 +26,7 @@ export default function App() {
           </Route>
 
           {/* Default */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </AuthProvider>
